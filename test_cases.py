@@ -3,11 +3,11 @@ import itertools
 cases = []
 
 def generate_combinations(alphabet, digits):
-    """Performs the cartesian product on an array with itself {digits} number of times"""
+    """ Performs the cartesian product on an array with itself {digits} number of times to generate all combinations of {digits} length. """
     yield from itertools.product(*[alphabet], repeat=digits) 
 
 def generate(alphabet, max_digits):
-    """Generates 2^(MAX_DIGITS) of test cases from given alphabet"""
+    """ Generates 2^(max_digits) of test cases from given alphabet. """
     cases.clear()
     for digits in range(0, max_digits+1):
         for case in generate_combinations(alphabet, digits):
