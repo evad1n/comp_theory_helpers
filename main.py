@@ -1,61 +1,85 @@
-import test_cases
-import regex
-import state_diagrams
+import test_cases as tc
+import regular_expressions as rx
+import finite_automata as fa
+import context_free_grammars as cfg
+import push_down_automata as pda
 
-ALPHABET = "ab"
+ALPHABET = [('0', '0'), ('0', '1'), ('1', '0'), ('1', '1')]
 
 # FINITE AUTOMATA STATE DIAGRAMS
 # The key value for each state defines what possible states can be reached from that particular key
 # Start state is always 0
-graph_1 = {
+finite_automaton_1 = {
     'states': [
-        {'0':[1], '1':[1]},
-        {'0':[1], '1':[2]},
-        {'0':[0], '1':[1]},
+        {('0', '0'): [0], ('0', '1'): [4],
+         ('1', '0'): [4], ('1', '1'): [1]},
+        {('0', '0'): [4], ('0', '1'): [0],
+         ('1', '0'): [2], ('1', '1'): [4]},
+        {('0', '0'): [3], ('0', '1'): [4],
+         ('1', '0'): [4], ('1', '1'): [2]},
+        {('0', '0'): [4], ('0', '1'): [0],
+         ('1', '0'): [2], ('1', '1'): [4]},
+        {('0', '0'): [], ('0', '1'): [],
+         ('1', '0'): [], ('1', '1'): []},
     ],
-    'final_states': [0,2]
+    'final_states': [0]
 }
 
-graph_2 = {
+finite_automaton_2 = {
     'states': [
-        {'a':[0], 'b':[1]},
-        {'a':[1], 'b':[0]},
+        {('0', '0'): [1, 2], ('0', '1'): [2],
+         ('1', '0'): [2, 3], ('1', '1'): [2, 3, 4]},
+        {('0', '0'): [1], ('0', '1'): [], ('1', '0'): [], ('1', '1'): []},
+        {('0', '0'): [2], ('0', '1'): [2],
+         ('1', '0'): [2, 3], ('1', '1'): [2, 3, 4]},
+        {('0', '0'): [4], ('0', '1'): [], ('1', '0'): [], ('1', '1'): []},
+        {('0', '0'): [], ('0', '1'): [5], ('1', '0'): [], ('1', '1'): []},
+        {('0', '0'): [5], ('0', '1'): [], ('1', '0'): [], ('1', '1'): []},
     ],
-    'final_states': [1]
+    'final_states': [1, 5]
 }
 
 # REGULAR EXPRESSIONS
-pattern_1 = "a*b(a|ba*b)*"
-pattern_1 = "^(" + pattern_1 + ")$" # Must match whole string
+regular_expression_1 = "|(a|b)a*b((b|a(a|b))a*b)*(|a)"
+regular_expression_1 = "^(" + regular_expression_1 + ")$"  # Must match whole string
 
-pattern_2 = "a*b(a|ba*b)*"
-pattern_2 = "^(" + pattern_2 + ")$" # Must match whole string
+regular_expression_2 = "(a|b)(a|(ba(a|b))*b)" + "(a(a|b)a*b|(ba*b)*)*" + "(a|)|"
+regular_expression_2 = "^(" + regular_expression_2 + ")$"  # Must match whole string
+
 
 # DEFINE LANGUAGE HERE
 def language(case):
-    """ Test if particular case passes the rules outlined below. Test cases are strings. """
-    return case.count('b') % 2 == 1
+    """ Test if particular case passes the rules outlined below. Test cases are lists. """
+    if not case:
+        return True
+    top = ''
+    bottom = ''
+    for step in case:
+        top += step[0]
+        bottom += step[1]
+    return (int(top, 2) * 3) == int(bottom, 2)
 
-def compare_regex_graph(pattern, graph):
-    """ Compares a regular expression to a graph for equivalence. """
-    for case in test_cases.cases:
-        # Compare regex and graph case by case to see if they produce same output
-        if regex.did_match(pattern, case) != state_diagrams.did_complete(graph, case):
+
+def compare_regex_graph(regular_expression, finite_automaton):
+    """ Compares a regular expression to a finite automaton for equivalence. """
+    for case in tc.cases:
+        # Compare regular expression and finite automaton case by case to see if they produce same output
+        if rx.did_match(regular_expression, case) != fa.did_complete(finite_automaton, case):
             # Output problem case
-            print(f"Failure at case: {case!r}")
-            print(f"Regex output: {regex.did_match(pattern, case)}")
-            print(f"Graph output: {state_diagrams.did_complete(graph, case)}")
+            print(f"Failure at case: {''.join(case)}")
+            print(f"Regular Expression output: {rx.did_match(regular_expression, case)}")
+            print(f"Finite Automaton output: {fa.did_complete(finite_automaton, case)}")
             print("Terminating...")
             return False
-    print("Regex is equivalent to graph for all test cases!")
+    print("Regular Expression is equivalent to Finite Automaton for all test cases!")
     return True
 
-test_cases.generate_cases(ALPHABET, 10)
+
+tc.generate_cases(ALPHABET, 5)
+# print(tc.cases[3])
 
 # ======== CALL FUNCTIONS HERE ========
 
-# regex.test_regex(pattern, language)
-
-# state_diagrams.test_graph(graph_2, language)
-
-# compare_regex_graph(pattern, primary_graph)
+# compare_regex_graph(pattern_1, graph_1)
+# compare_regex_graph(pattern_2, graph_1)
+fa.test_finite_automaton(finite_automaton_1, language)
