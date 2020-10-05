@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import test_cases as tc
 import regular_expressions as rx
 import finite_automata as fa
@@ -76,10 +78,21 @@ def compare_regex_graph(regular_expression, finite_automaton):
 
 
 tc.generate_cases(ALPHABET, 5)
-# print(tc.cases[3])
+print(tc.cases[3])
 
 # ======== CALL FUNCTIONS HERE ========
 
 # compare_regex_graph(pattern_1, graph_1)
 # compare_regex_graph(pattern_2, graph_1)
 fa.test_finite_automaton(finite_automaton_1, language)
+
+
+# TODO
+
+# cry
+# scream
+# cfg
+# pda
+# cry a lot
+# closure operations
+# convert to classes?

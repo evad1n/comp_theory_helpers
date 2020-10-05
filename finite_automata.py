@@ -4,19 +4,17 @@ from test_cases import cases
 
 def next_states(path, next, finite_automaton):
     """ Returns all possible next states for this finite automaton given current path and next character. """
-    newPaths = []
+    new_paths = []
     # Get current state
     current = path[-1]
     # Generate all possible new paths given the current path
     for option in finite_automaton['states'][current][next]:
-        newPaths.append(path + [option])
-    return newPaths
+        new_paths.append(path + [option])
+    return new_paths
 
 
 def did_complete(finite_automaton, case):
     """ Returns True if this case ended on a final state for this finite automaton. """
-    case = case[:]
-    case.reverse()
     # Start state is always 0
     paths = [[0]]
     length = len(case)
@@ -24,12 +22,12 @@ def did_complete(finite_automaton, case):
     for i in range(length):
         # Get next character to process
         next_char = case[i]
-        newPaths = []
+        new_paths = []
         # Generate new possible states from current states
         for path in paths:
-            newPaths += (next_states(path, next_char, finite_automaton))
+            new_paths += (next_states(path, next_char, finite_automaton))
         # Overwrite old states with the new states
-        paths = newPaths[:]
+        paths = new_paths[:]
     # Check to see if this case ends on a final state
     for path in paths:
         if len(path) == length + 1 and path[-1] in finite_automaton['final_states']:
