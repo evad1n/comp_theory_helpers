@@ -5,10 +5,3 @@
 * Finite automata state diagrams
 * Regular expressions
 * Context free grammars
-
-
-# TODO
-
-- pda
-- closure operations
-- convert to classes?
