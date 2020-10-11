@@ -3,29 +3,25 @@
 # Functions to test context free grammars
 from test_cases import cases, generate_cases
 
-
-cfg_1 = {
-    'variables': {
-        'A': ['0B0', '1B1', 'C'],
-        'B': ['BB', 'C'],
-        'C': ['0', '1', ''],
-    },
-    'terminals': ['0', '1'],
-    'start': 'A'
-}
-
-def language(case):
-    """ Test if particular case passes the rules outlined below. Test cases are lists. """
-    return case == [] or case[0] == case[-1]
-
 def transition(string, cfg):
-    """ Returns a list of strings with each string representing a possible transition from the original string. """
-    new = []
-    for index, char in enumerate(string):
+    """ Returns a list of strings with each string representing a possible state after transitioning all variables in the original string. """
+    new = ['']
+    curr = []
+    prev_index = 0
+    index = 0
+    while index < len(string):
+        char = string[index]
         # If it's a variable
         if char in cfg['variables']:
-            for possible in cfg['variables'][char]:
-                new.append(string[0:index] + possible + string[index+1:])
+            curr = []
+            for n in new:
+                for possible in cfg['variables'][char]:
+                    curr.append(n + string[prev_index:index] + possible)
+            new = curr[:]
+            prev_index = index + 1
+        index += 1
+    for i, n in enumerate(new):
+        new[i] = n + string[prev_index:]
     return new
 
 def only_terminals(string, cfg):
@@ -50,15 +46,14 @@ def generate_strings(cfg, max_depth):
         # Remove duplicates
         strings = list(dict.fromkeys(strings))
         level += 1
-    # print(strings)
     # Only strings that are exclusively terminals and no duplicates
     return list(filter(lambda string: only_terminals(string, cfg), strings))
 
 
-def test_context_free_grammar(cfg, in_langauge):
-    """ Returns True if the context free grammar produced all strings that fit in langauge. """
+def test_context_free_grammar(cfg, language, transition_depth):
+    """ Returns True if the context free grammar produced all strings that in langauge. The transition depth represents"""
     global cases
-    produced = generate_strings(cfg_1, 10)
+    produced = generate_strings(cfg, transition_depth)
     # get max length of produced strings
     max_length = len(produced[-1])
     generate_cases(cfg['terminals'], max_length)
@@ -75,8 +70,3 @@ def test_context_free_grammar(cfg, in_langauge):
             return False
     print(f"Context free grammar produces correct strings for all test cases up to length {max_length}!")
     return True
-
-
-test_context_free_grammar(cfg_1, language)
-
-# Optimize transitions so they all occur at once

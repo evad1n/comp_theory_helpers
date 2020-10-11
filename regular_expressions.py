@@ -11,22 +11,22 @@ def did_match(regular_expression, case):
     return False
 
 
-def test_regex(regular_expression, in_language):
+def test_regex(regular_expression, language):
     """ Returns True if regular expression recognizes language for all test cases. """
     for case in cases:
         # Should it have matched?
-        if did_match(regular_expression, case) != in_language(case):
+        if did_match(regular_expression, case) != language(case):
             # Output problem case
             print(f"Failure at case: {''.join(case)}")
             print(f"Regex output: {did_match(regular_expression, case)}")
-            print(f"Should have been: {in_language(case)}")
+            print(f"Should have been: {language(case)}")
             print("Terminating...")
             return False
     print("Regex recognizes the language for all test cases!")
     return True
 
 
-def compare_regex(regular_expression_1, regular_expression_2, in_language):
+def compare_regex(regular_expression_1, regular_expression_2, language):
     """ Returns True if the two regular expressions are equivalent for all test cases. """
     for case in cases:
         # Compare each regex case by case to see if they produce same output

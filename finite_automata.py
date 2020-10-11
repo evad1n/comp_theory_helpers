@@ -35,22 +35,22 @@ def did_complete(finite_automaton, case):
     return False
 
 
-def test_finite_automaton(finite_automaton, in_langauge):
+def test_finite_automaton(finite_automaton, language):
     """ Returns True if the finite automaton satisfies all test cases. """
     for case in cases:
         # Compare finite automaton output with expected output from language
-        if did_complete(finite_automaton, case) != in_langauge(case):
+        if did_complete(finite_automaton, case) != language(case):
             # Output problem case
             print(f"Failure at case: {case}")
             print(f"Finite Automaton Output: {did_complete(finite_automaton, case)}")
-            print(f"Should have been: {in_langauge(case)}")
+            print(f"Should have been: {language(case)}")
             print("Terminating...")
             return False
     print("Finite Automaton recognizes language for all test cases!")
     return True
 
 
-def compare_finite_automata(finite_automaton_1, finite_automaton_2, in_langauge):
+def compare_finite_automata(finite_automaton_1, finite_automaton_2, language):
     """ Returns True if the two finite automata are equivalent for all test cases. """
     for case in cases:
         # Compare each finite automaton case by case to see if they produce same output
